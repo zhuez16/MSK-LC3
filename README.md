@@ -5,4 +5,8 @@
 
 包含两个示例比特流：求R0、R1的GCD、将R0右移一位。
 
+程序运行完成后可以将reg的数据输入到7段数码管上。
+
 电路板：NEXYS4 DDR 型号： xc7a100tcsg324-1
+
+参考书目：Introduction to Computing Systems: From bits & gates to C & beyond by Yale N. Patt.
