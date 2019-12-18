@@ -1,7 +1,7 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.1 (win64) Build 2552052 Fri May 24 14:49:42 MDT 2019
--- Date        : Sun Dec 15 21:18:21 2019
+-- Date        : Wed Dec 18 12:51:08 2019
 -- Host        : DESKTOP-7LO5JPI running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode synth_stub
 --               D:/homework/vivado/exp10/LC3/LC3.srcs/sources_1/ip/dist_mem_gen_0_2/dist_mem_gen_0_stub.vhdl

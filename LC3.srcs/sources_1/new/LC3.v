@@ -1,15 +1,15 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company:  None
+// Engineer:  Zhuenzuo
 // 
 // Create Date: 2019/12/08 18:33:38
 // Design Name: 
 // Module Name: LC3
-// Project Name: 
-// Target Devices: 
+// Project Name: LC3
+// Target Devices: FPGA
 // Tool Versions: 
-// Description: 
+// Description: personal LC3 on fpga
 // 
 // Dependencies: 
 // 
@@ -19,39 +19,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-/*module memory(
-input [15:0] bus,
-input [15:0] new,
-input [1:0] type,
-input WE,
-input clk,
-output [15:0] out
-);
-parameter bus_to_out=2'b00;
-parameter bus_to_MDR=2'b01;
-parameter new_to_mem_bus=2'b10;
-reg [15:0] MAR;
-reg [15:0] MDR;
-wire [15:0] tmp;
-always@(*)
-begin
-    case (type)
-        bus_to_out:
-        begin
-            MAR=bus;
-            MDR=tmp;
-        end
-        bus_to_MDR:
-        begin
-            MAR=bus;
-            MDR=tmp;
-        end
-    endcase
-end
-assign out=tmp;
-endmodule*/
-
-
 
 module REG_FILE(
 input [2:0] DR,
@@ -60,7 +27,8 @@ input [2:0] SR1,
 input [2:0] SR2,
 input LDREG,
 input clk,
-input [2:0] SWs,
+input [3:0] SWs,
+input [15:0] curpc,
 output reg [15:0] SR1OUT,
 output reg [15:0] SR2OUT,
 output [7:0] SGs,
@@ -73,8 +41,8 @@ reg [3:0] ANout;
 reg [16:0] count;
 initial count=16'b0;
 initial p=2'b00;
-initial regfile[0]=16'd84;
-initial regfile[1]=16'd96;
+initial regfile[0]=16'hE582;
+initial regfile[1]=16'b0;
 initial regfile[2]=16'b0;
 initial regfile[3]=16'b0;
 initial regfile[4]=16'b0;
@@ -91,36 +59,65 @@ begin
     if (count>11'd1000)
     begin
         count<=0;
+        if (SWs[3]==1)
+        begin
         case (p)
-            2'b00:
-            begin
-                out<=regfile[SWs][3:0];
-                ANout=4'b1110;
-            end
-            2'b01:
-            begin
-                out<=regfile[SWs][7:4];
-                ANout=4'b1101;
-            end
-            2'b10:
-            begin
-                out<=regfile[SWs][11:8];
-                ANout=4'b1011;
-            end
-            2'b11:
-            begin
-                out<=regfile[SWs][15:12];
-                ANout=4'b0111;
-            end
-        endcase
-        p<=p+1;
+                2'b00:
+                begin
+                    out<=curpc[3:0];
+                    ANout=4'b1110;
+                end
+                2'b01:
+                begin
+                    out<=curpc[7:4];
+                    ANout=4'b1101;
+                end
+                2'b10:
+                begin
+                    out<=curpc[11:8];
+                    ANout=4'b1011;
+                end
+                2'b11:
+                begin
+                    out<=curpc[15:12];
+                    ANout=4'b0111;
+                end
+            endcase
+            p<=p+1;
+        end
+        else
+        begin
+            case (p)
+                2'b00:
+                begin
+                    out<=regfile[SWs][3:0];
+                    ANout=4'b1110;
+                end
+                2'b01:
+                begin
+                    out<=regfile[SWs][7:4];
+                    ANout=4'b1101;
+                end
+                2'b10:
+                begin
+                    out<=regfile[SWs][11:8];
+                    ANout=4'b1011;
+                end
+                2'b11:
+                begin
+                    out<=regfile[SWs][15:12];
+                    ANout=4'b0111;
+                end
+            endcase
+            p<=p+1;
+        end
     end
     else
         count<=count+1;
         
     if (LDREG==1)
     begin
-        regfile[DR]=newreg;
+        regfile[DR]<=newreg;
     end
 end
 assign ANs=ANout;
@@ -141,7 +138,7 @@ endmodule
 
 module init(
 input CLK,
-input [2:0] SW,
+input [3:0] SW,
 input run_to_halt,
 input one_step,
 output [7:0] SG,
@@ -150,28 +147,25 @@ output finished
 );
 wire out;
 reg new_clk;
-wire wd;
-signal_edge(.clk(CLK),.button(one_step),.button_redge(out));
-control_unit(.CLK(new_clk),.SW(SW),.SG(SG),.AN(AN),.finished(finished),.wd(wd));
+reg run;
+signal_edge clearbutton(.clk(CLK),.button(one_step),.button_redge(out));
+control_unit start(.CLK(CLK),.one_step(run),.SW(SW),.SG(SG),.AN(AN),.finished(finished));
 always@(*)
 begin
     if (run_to_halt==1)
-        new_clk=CLK;
+        run<=1;
     else
-        if (wd==1)
-            new_clk=out;
-        else
-            new_clk=CLK;
+        run<=out;
 end
 endmodule
 
 module control_unit(
 input CLK,
-input [2:0] SW,
+input [3:0] SW,
+input one_step,
 output [7:0] SG,
 output [3:0] AN,
-output finished,
-output wd
+output finished
     );
 reg [6:0] GateMAR;
 reg [15:0] GateMDR;
@@ -227,74 +221,6 @@ parameter start=6'b111111;
 parameter changePC=6'b100010;
 reg [5:0] curstate=start;
 wire os_redge;
-/*always@(*)
-begin
-    if (CLK==1)
-    begin
-    if (curstate==F1)
-        curstate=F2;
-    else if (curstate==F2)
-    begin
-        case (IR[15:12])
-            4'b0001: curstate=ADD;
-            4'b0101: curstate=AND;
-            4'b0000: curstate=BR;
-            4'b0010: curstate=LD;
-            4'b1010: curstate=LDI;
-            4'b0110: curstate=LDR;
-            4'b1110: curstate=LEA;
-            4'b0011: curstate=ST;
-            4'b1011: curstate=STI;
-            4'b0111: curstate=STR;
-            4'b1111: curstate=HALT;
-        endcase
-    end
-    else if (curstate==WD)
-    begin
-        curstate=F1;
-    end
-    else if (curstate==ADD)
-        curstate=ADD1;
-    else if (curstate==ADD1)
-        curstate=ADD2;
-    else if (curstate==ADD2)
-        curstate=F1;
-    else if (curstate==AND)
-        curstate=AND1;
-    else if (curstate==AND1)
-        curstate=WD;
-    else if (curstate==NOT)
-        curstate=NOT1;
-    else if (curstate==NOT1)
-        curstate=WD;
-    else if (curstate==ST)
-        curstate=ST1;
-    else if (curstate==ST1)
-        curstate=WD;
-    else if (curstate==LDR)
-        curstate=LDR1;
-    else if (curstate==LDR1)
-        curstate=LDR2;
-    else if (curstate==LDR2)
-        curstate=WD;
-    else if (curstate==STR)
-        curstate=STR1;
-    else if (curstate==STR1)
-        curstate=WD;
-    else if (curstate==LEA)
-        curstate=WD;
-    else if (curstate==LDI)
-        curstate=LDI1;
-    else if (curstate==LDI1)
-        curstate=LDI2;
-    else if (curstate==LDI2)
-        curstate=WD;
-    else if (curstate==BR)
-        curstate=F1;
-    else
-        curstate=curstate;
-    end
-end*/
 always@(posedge CLK)
 begin
     if (newreg[14:0]>0 && newreg[15]==0)
@@ -341,20 +267,27 @@ begin
     else if (curstate==F2)
     begin
         IR<=MDR;
-        case (MDR[15:12])
-            4'b0001: curstate<=ADD;
-            4'b0101: curstate<=AND;
-            4'b0000: curstate<=BR;
-            4'b0010: curstate<=LD;
-            4'b1010: curstate<=LDI;
-            4'b0110: curstate<=LDR;
-            4'b1110: curstate<=LEA;
-            4'b0011: curstate<=ST;
-            4'b1011: curstate<=STI;
-            4'b0111: curstate<=STR;
-            4'b1111: curstate<=HALT;
-            4'b1001: curstate<=NOT;
-        endcase
+        if (one_step==1)
+        begin
+            case (MDR[15:12])
+                4'b0001: curstate<=ADD;
+                4'b0101: curstate<=AND;
+                4'b0000: curstate<=BR;
+                4'b0010: curstate<=LD;
+                4'b1010: curstate<=LDI;
+                4'b0110: curstate<=LDR;
+                4'b1110: curstate<=LEA;
+                4'b0011: curstate<=ST;
+                4'b1011: curstate<=STI;
+                4'b0111: curstate<=STR;
+                4'b1111: curstate<=HALT;
+                4'b1001: curstate<=NOT;
+            endcase
+        end
+        else
+        begin
+            curstate<=curstate;
+        end
     end
     else if (curstate==WD)
     begin
@@ -603,12 +536,6 @@ begin
         curstate<=F1;
 end
 assign finished=(curstate==HALT);
-assign wd=(curstate==F1);
 dist_mem_gen_0 run(.a(GateMAR),.d(GateMDR),.clk(~CLK),.we(WE),.spo(MDR));
-//memory fetchmem(.bus(GateMAR),.new(GateMDR),.type(type),.WE(WE),.out(MDR));
-REG_FILE fetchreg(.DR(DR),.SGs(SG),.SWs(SW),.ANs(AN),.newreg(newreg),.SR1(SR1),.SR2(SR2),.LDREG(LDREG),.clk(~CLK),.SR1OUT(SR1OUT),.SR2OUT(SR2OUT));
+REG_FILE fetchreg(.DR(DR),.SGs(SG),.SWs(SW),.ANs(AN),.newreg(newreg),.SR1(SR1),.SR2(SR2),.LDREG(LDREG),.clk(~CLK),.SR1OUT(SR1OUT),.SR2OUT(SR2OUT),.curpc(pc));
 endmodule
-
-/*
-0010 0000 0100 0000
-*/

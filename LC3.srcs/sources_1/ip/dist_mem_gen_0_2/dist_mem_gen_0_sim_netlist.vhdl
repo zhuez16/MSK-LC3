@@ -1,7 +1,7 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.1 (win64) Build 2552052 Fri May 24 14:49:42 MDT 2019
--- Date        : Sun Dec 15 21:18:21 2019
+-- Date        : Wed Dec 18 12:51:08 2019
 -- Host        : DESKTOP-7LO5JPI running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
 --               D:/homework/vivado/exp10/LC3/LC3.srcs/sources_1/ip/dist_mem_gen_0_2/dist_mem_gen_0_sim_netlist.vhdl
@@ -245,7 +245,7 @@ begin
     );
 ram_reg_0_127_0_0: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"0000000000000000000000018A809D98"
+      INIT => X"00000000000000000000000000035538"
     )
         port map (
       A0 => a(0),
@@ -262,7 +262,7 @@ ram_reg_0_127_0_0: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_10_10: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"00000000000000000000000499FFBC01"
+      INIT => X"000000000000000000000000000188B6"
     )
         port map (
       A0 => a(0),
@@ -279,7 +279,7 @@ ram_reg_0_127_10_10: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_11_11: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"0000000000000000000000048A84C001"
+      INIT => X"00000000000000000000000000011940"
     )
         port map (
       A0 => a(0),
@@ -296,7 +296,7 @@ ram_reg_0_127_11_11: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_12_12: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"0000000000000000000000057593BBBA"
+      INIT => X"0000000000000000000000000002F55F"
     )
         port map (
       A0 => a(0),
@@ -313,7 +313,7 @@ ram_reg_0_127_12_12: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_13_13: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"00000000000000000000000500490001"
+      INIT => X"00000000000000000000000000020000"
     )
         port map (
       A0 => a(0),
@@ -330,7 +330,7 @@ ram_reg_0_127_13_13: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_14_14: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"00000000000000000000000500410000"
+      INIT => X"00000000000000000000000000022141"
     )
         port map (
       A0 => a(0),
@@ -347,7 +347,7 @@ ram_reg_0_127_14_14: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_15_15: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"00000000000000000000000500000888"
+      INIT => X"00000000000000000000000000021000"
     )
         port map (
       A0 => a(0),
@@ -364,7 +364,7 @@ ram_reg_0_127_15_15: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_1_1: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"0000000000000000000000000DBE28CC"
+      INIT => X"00000000000000000000000000019864"
     )
         port map (
       A0 => a(0),
@@ -381,7 +381,7 @@ ram_reg_0_127_1_1: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_2_2: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"00000000000000000000000108B84C88"
+      INIT => X"00000000000000000000000000023280"
     )
         port map (
       A0 => a(0),
@@ -398,7 +398,7 @@ ram_reg_0_127_2_2: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_3_3: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"000000000000000000000000828C0888"
+      INIT => X"00000000000000000000000000001020"
     )
         port map (
       A0 => a(0),
@@ -415,7 +415,7 @@ ram_reg_0_127_3_3: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_4_4: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"0000000000000000000000000A840C88"
+      INIT => X"00000000000000000000000000011002"
     )
         port map (
       A0 => a(0),
@@ -432,7 +432,7 @@ ram_reg_0_127_4_4: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_5_5: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"000000000000000000000001FA849BBB"
+      INIT => X"0000000000000000000000000003101F"
     )
         port map (
       A0 => a(0),
@@ -449,7 +449,7 @@ ram_reg_0_127_5_5: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_6_6: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"000000000000000000000006EA040BA0"
+      INIT => X"0000000000000000000000000001501F"
     )
         port map (
       A0 => a(0),
@@ -466,7 +466,7 @@ ram_reg_0_127_6_6: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_7_7: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"000000000000000000000004CAD79000"
+      INIT => X"00000000000000000000000000018010"
     )
         port map (
       A0 => a(0),
@@ -483,7 +483,7 @@ ram_reg_0_127_7_7: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_8_8: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"0000000000000000000000048AC58000"
+      INIT => X"00000000000000000000000000010000"
     )
         port map (
       A0 => a(0),
@@ -500,7 +500,7 @@ ram_reg_0_127_8_8: unisim.vcomponents.RAM128X1S
     );
 ram_reg_0_127_9_9: unisim.vcomponents.RAM128X1S
     generic map(
-      INIT => X"000000000000000000000004D90423E4"
+      INIT => X"00000000000000000000000000014A3B"
     )
         port map (
       A0 => a(0),
